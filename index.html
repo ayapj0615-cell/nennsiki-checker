@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>年式チェッカー</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: #f0f0f0;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: white;
+      padding: 14px 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    header h1 { font-size: 17px; font-weight: bold; letter-spacing: 0.5px; }
+    header p { font-size: 11px; opacity: 0.65; margin-top: 2px; }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* アップロードエリア */
+    .upload-area {
+      background: white;
+      border: 2.5px dashed #bbb;
+      border-radius: 16px;
+      padding: 36px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 12px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .upload-area:active { background: #f5f5f5; }
+
+    .upload-area.has-image {
+      border-style: solid;
+      border-color: #1a1a2e;
+      padding: 8px;
+    }
+
+    .upload-icon { font-size: 52px; margin-bottom: 10px; }
+    .upload-text { font-size: 17px; font-weight: bold; color: #1a1a2e; margin-bottom: 4px; }
+    .upload-sub { font-size: 12px; color: #999; }
+
+    #preview {
+      width: 100%;
+      border-radius: 10px;
+      display: none;
+      max-height: 320px;
+      object-fit: contain;
+    }
+
+    #fileInput { display: none; }
+
+    /* ボタン */
+    .btn-analyze {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: #1a1a2e;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 12px;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s;
+    }
+
+    .btn-analyze:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-analyze:active:not(:disabled) { opacity: 0.75; }
+
+    /* ローディング */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 28px;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid #ddd;
+      border-top-color: #1a1a2e;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading p { font-size: 14px; color: #666; }
+
+    /* エラー */
+    .error-box {
+      display: none;
+      background: #fff3f3;
+      border: 1px solid #f5a0a0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #c0392b;
+      font-size: 14px;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    /* 結果カード */
+    .result-card {
+      display: none;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .result-badge {
+      padding: 22px 16px;
+      text-align: center;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .result-badge.buy     { background: #2e7d32; }
+    .result-badge.consider { background: #e65100; }
+    .result-badge.skip    { background: #616161; }
+
+    .result-body {
+      padding: 16px;
+    }
+
+    .result-raw {
+      font-size: 14px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #333;
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .btn-reset {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: white;
+      color: #1a1a2e;
+      border: 2px solid #1a1a2e;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-reset:active { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏷️ 年式チェッカー</h1>
+  <p>タグ写真を撮るだけで仕入れ判定</p>
+</header>
+
+<div class="container">
+
+  <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+    <div id="uploadPlaceholder">
+      <div class="upload-icon">📷</div>
+      <div class="upload-text">タグ写真を撮る / 選ぶ</div>
+      <div class="upload-sub">内タグ・洗濯タグ・型番タグ</div>
+    </div>
+    <img id="preview" alt="プレビュー">
+  </div>
+
+  <input type="file" id="fileInput" accept="image/*" capture="environment">
+
+  <div class="error-box" id="errorBox"></div>
+
+  <button class="btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
+    判定する
+  </button>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>タグを解析中…</p>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-badge" id="resultBadge"></div>
+    <div class="result-body">
+      <div class="result-raw" id="resultRaw"></div>
+      <button class="btn-reset" onclick="reset()">📷 別の写真を撮る</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let imageData = null;
+  let imageType = null;
+
+  const fileInput    = document.getElementById('fileInput');
+  const preview      = document.getElementById('preview');
+  const uploadArea   = document.getElementById('uploadArea');
+  const placeholder  = document.getElementById('uploadPlaceholder');
+  const analyzeBtn   = document.getElementById('analyzeBtn');
+
+  fileInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    resizeAndConvert(file, function (b64, mime) {
+      imageData = b64;
+      imageType = mime;
+      preview.src = 'data:' + mime + ';base64,' + b64;
+      preview.style.display = 'block';
+      placeholder.style.display = 'none';
+      uploadArea.classList.add('has-image');
+      analyzeBtn.disabled = false;
+      hideError();
+      document.getElementById('resultCard').style.display = 'none';
+    });
+  });
+
+  function resizeAndConvert(file, cb) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = new Image();
+      img.onload = function () {
+        const MAX = 1200;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+          else        { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        cb(dataUrl.split(',')[1], 'image/jpeg');
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function analyze() {
+    if (!imageData) return;
+    hideError();
+    analyzeBtn.disabled = true;
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('resultCard').style.display = 'none';
+
+    try {
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageData, mediaType: imageType }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '判定に失敗しました');
+      showResult(data);
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      document.getElementById('loading').style.display = 'none';
+      analyzeBtn.disabled = false;
+    }
+  }
+
+  function showResult(data) {
+    const card  = document.getElementById('resultCard');
+    const badge = document.getElementById('resultBadge');
+    const raw   = document.getElementById('resultRaw');
+
+    badge.className = 'result-badge ' + data.judgment;
+    if (data.judgment === 'buy') {
+      badge.textContent = '✅ 仕入れ推奨';
+    } else if (data.judgment === 'consider') {
+      badge.textContent = '🔶 要検討';
+    } else {
+      badge.textContent = '⛔ スルー推奨';
+    }
+
+    raw.textContent = data.result;
+    card.style.display = 'block';
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+
+  function reset() {
+    imageData = null; imageType = null;
+    preview.style.display = 'none'; preview.src = '';
+    placeholder.style.display = 'block';
+    uploadArea.classList.remove('has-image');
+    analyzeBtn.disabled = true;
+    document.getElementById('resultCard').style.display = 'none';
+    fileInput.value = '';
+    hideError();
+  }
+
+  function showError(msg) {
+    const b = document.getElementById('errorBox');
+    b.textContent = '⚠️ ' + msg;
+    b.style.display = 'block';
+  }
+
+  function hideError() {
+    document.getElementById('errorBox').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
