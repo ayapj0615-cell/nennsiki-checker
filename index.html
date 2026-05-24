@@ -21,30 +21,101 @@
       text-align: center;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
-
     header h1 { font-size: 17px; font-weight: bold; letter-spacing: 0.5px; }
-    header p { font-size: 11px; opacity: 0.65; margin-top: 2px; }
+    header p  { font-size: 11px; opacity: 0.65; margin-top: 2px; }
 
-    .container {
-      max-width: 480px;
-      margin: 0 auto;
+    .container { max-width: 480px; margin: 0 auto; padding: 16px; }
+
+    /* ---- 共通カード ---- */
+    .card {
+      background: white;
+      border-radius: 16px;
       padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    /* タブ */
+    .step-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    /* ---- STEP1 ブランド入力（タブより上、共通） ---- */
+    .brand-wrap { position: relative; }
+
+    .brand-input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .brand-input:focus { border-color: #1a1a2e; }
+
+    /* サジェスト */
+    .suggestions {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: white;
+      border: 1.5px solid #ddd;
+      border-radius: 12px;
+      z-index: 200;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+      overflow: hidden;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .sug-item {
+      padding: 12px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #f5f5f5;
+      line-height: 1.4;
+    }
+    .sug-item:last-child { border-bottom: none; }
+    .sug-item:active { background: #f5f5f5; }
+    .sug-sub { font-size: 11px; color: #aaa; display: block; margin-top: 1px; }
+
+    /* メルカリボタン */
+    .btn-mercari {
+      display: none;
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      background: #ff0211;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-mercari:active { opacity: 0.8; }
+
+    /* ---- タブ ---- */
     .tab-bar {
       display: flex;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       background: white;
       border-radius: 14px;
       padding: 5px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-
     .tab {
       flex: 1;
       padding: 11px 8px;
@@ -54,18 +125,13 @@
       font-weight: bold;
       cursor: pointer;
       background: transparent;
-      color: #888;
+      color: #999;
       transition: all 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
+    .tab.active { background: #1a1a2e; color: white; box-shadow: 0 2px 6px rgba(26,26,46,0.25); }
 
-    .tab.active {
-      background: #1a1a2e;
-      color: white;
-      box-shadow: 0 2px 6px rgba(26,26,46,0.25);
-    }
-
-    /* アップロードエリア */
+    /* ---- 写真モード ---- */
     .upload-area {
       background: white;
       border: 2.5px dashed #bbb;
@@ -77,30 +143,32 @@
       margin-bottom: 12px;
       -webkit-tap-highlight-color: transparent;
     }
-
     .upload-area:active { background: #f5f5f5; }
-
-    .upload-area.has-image {
-      border-style: solid;
-      border-color: #1a1a2e;
-      padding: 8px;
-    }
-
+    .upload-area.has-image { border-style: solid; border-color: #1a1a2e; padding: 8px; }
     .upload-icon { font-size: 52px; margin-bottom: 10px; }
     .upload-text { font-size: 17px; font-weight: bold; color: #1a1a2e; margin-bottom: 4px; }
-    .upload-sub { font-size: 12px; color: #999; }
+    .upload-sub  { font-size: 12px; color: #999; }
+    #preview { width: 100%; border-radius: 10px; display: none; max-height: 320px; object-fit: contain; }
+    #fileInput, #fileInput2 { display: none; }
 
-    #preview {
-      width: 100%;
-      border-radius: 10px;
+    /* Google Lensボタン */
+    .btn-lens {
       display: none;
-      max-height: 320px;
-      object-fit: contain;
+      width: 100%;
+      padding: 13px;
+      background: white;
+      color: #1a73e8;
+      border: 2px solid #1a73e8;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 12px;
+      -webkit-tap-highlight-color: transparent;
     }
+    .btn-lens:active { background: #e8f0fe; }
 
-    #fileInput { display: none; }
-
-    /* ボタン */
+    /* 判別ボタン */
     .btn-analyze {
       display: block;
       width: 100%;
@@ -116,27 +184,18 @@
       -webkit-tap-highlight-color: transparent;
       transition: opacity 0.15s;
     }
-
     .btn-analyze:disabled { opacity: 0.35; cursor: not-allowed; }
     .btn-analyze:active:not(:disabled) { opacity: 0.75; }
 
     /* ローディング */
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 28px;
-    }
-
+    .loading { display: none; text-align: center; padding: 28px; }
     .spinner {
-      width: 44px;
-      height: 44px;
-      border: 4px solid #ddd;
-      border-top-color: #1a1a2e;
+      width: 44px; height: 44px;
+      border: 4px solid #ddd; border-top-color: #1a1a2e;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       margin: 0 auto 12px;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading p { font-size: 14px; color: #666; }
 
@@ -153,7 +212,7 @@
       line-height: 1.5;
     }
 
-    /* 結果カード（写真・手入力共通） */
+    /* 結果カード（共通） */
     .result-card {
       display: none;
       background: white;
@@ -162,22 +221,17 @@
       margin-bottom: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
-
     .result-badge {
       padding: 22px 16px;
       text-align: center;
       color: white;
       font-size: 22px;
       font-weight: bold;
-      letter-spacing: 1px;
     }
-
     .result-badge.buy      { background: #2e7d32; }
     .result-badge.consider { background: #e65100; }
     .result-badge.skip     { background: #616161; }
-
     .result-body { padding: 16px; }
-
     .result-raw {
       font-size: 14px;
       line-height: 1.8;
@@ -189,7 +243,6 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-
     .btn-reset {
       display: block;
       width: 100%;
@@ -203,81 +256,39 @@
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-
     .btn-reset:active { background: #f0f0f0; }
 
-    /* ====== 手入力モード ====== */
-
-    /* ブランド検索 */
-    .brand-search-section {
-      background: white;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .brand-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: #888;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-      display: block;
-      text-transform: uppercase;
-    }
-
-    .brand-search-wrap { position: relative; }
-
-    .brand-input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1.5px solid #ddd;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.2s;
-      -webkit-appearance: none;
-    }
-
-    .brand-input:focus { border-color: #1a1a2e; }
-
-    .suggestions {
+    /* 信頼度「低」のとき：2枚目アップロードエリア */
+    .low-conf-section {
       display: none;
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      right: 0;
-      background: white;
-      border: 1.5px solid #ddd;
-      border-radius: 10px;
-      z-index: 100;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-      overflow: hidden;
-      max-height: 260px;
-      overflow-y: auto;
+      background: #fff8e1;
+      border: 1.5px solid #ffc107;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
     }
-
-    .suggestion-item {
-      padding: 13px 14px;
-      font-size: 14px;
-      color: #222;
+    .low-conf-msg {
+      font-size: 13px;
+      font-weight: bold;
+      color: #5d4037;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .upload-area-2 {
+      background: #fffde7;
+      border: 2px dashed #ffc107;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
       cursor: pointer;
-      border-bottom: 1px solid #f0f0f0;
-      line-height: 1.4;
+      -webkit-tap-highlight-color: transparent;
     }
+    .upload-area-2:active { background: #fff9c4; }
+    .upload-area-2 .upload-icon { font-size: 36px; margin-bottom: 6px; }
+    .upload-area-2 .upload-text { font-size: 14px; font-weight: bold; color: #5d4037; }
+    #preview2 { width: 100%; border-radius: 8px; display: none; max-height: 200px; object-fit: contain; }
 
-    .suggestion-item:last-child { border-bottom: none; }
-    .suggestion-item:active { background: #f5f5f5; }
-
-    .suggestion-item .sub-label {
-      font-size: 11px;
-      color: #999;
-      display: block;
-      margin-top: 1px;
-    }
-
-    /* ガイドカード */
+    /* ---- 手入力モード ---- */
     .brand-guide-card {
       display: none;
       background: #e8f4fd;
@@ -286,21 +297,9 @@
       padding: 14px 16px;
       margin-bottom: 12px;
     }
+    .brand-guide-title { font-size: 13px; font-weight: bold; color: #1565c0; margin-bottom: 6px; }
+    .brand-guide-text  { font-size: 14px; color: #1a1a2e; line-height: 1.7; }
 
-    .brand-guide-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: #1565c0;
-      margin-bottom: 6px;
-    }
-
-    .brand-guide-text {
-      font-size: 14px;
-      color: #1a1a2e;
-      line-height: 1.7;
-    }
-
-    /* コード入力 */
     .code-input-section {
       display: none;
       background: white;
@@ -309,79 +308,89 @@
       margin-bottom: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-
-    .code-label {
-      font-size: 12px;
-      font-weight: bold;
-      color: #888;
-      letter-spacing: 0.5px;
-      display: block;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
     .code-input {
       width: 100%;
       padding: 16px 14px;
       border: 2px solid #1a1a2e;
       border-radius: 10px;
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       text-align: center;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       outline: none;
       -webkit-appearance: none;
     }
 
-    /* 特殊ブランドカード（クリステンセンドゥノルドなど） */
     .special-card {
       display: none;
       background: #fff8e1;
-      border: 1.5px solid #ffcc02;
+      border: 1.5px solid #ffc107;
       border-radius: 14px;
       padding: 16px;
       margin-bottom: 12px;
     }
-
-    .special-card p {
-      font-size: 14px;
-      color: #5d4037;
-      line-height: 1.7;
-      margin-bottom: 12px;
-    }
-
+    .special-card p { font-size: 14px; color: #5d4037; line-height: 1.7; margin-bottom: 12px; }
     .btn-google {
       display: block;
-      width: 100%;
-      padding: 14px;
+      padding: 13px;
       background: #1a73e8;
       color: white;
-      border: none;
       border-radius: 10px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
       text-align: center;
       text-decoration: none;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
 
-    .btn-google:active { opacity: 0.8; }
+    .manual-hint {
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+      padding: 24px 0;
+    }
+
+    .brand-not-found {
+      display: none;
+      background: #fff3e0;
+      border: 1.5px solid #ffb74d;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 14px;
+      color: #5d4037;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
 
 <header>
   <h1>🏷️ 年式チェッカー</h1>
-  <p>タグ写真を撮るだけで仕入れ判定</p>
+  <p>ブランド名を入力してから写真または手入力で判別</p>
 </header>
 
 <div class="container">
 
-  <!-- タブ -->
+  <!-- ===== STEP 1: ブランド名入力（写真・手入力の両モード共通） ===== -->
+  <div class="card">
+    <span class="step-label">STEP 1 ブランド名を入力（必須）</span>
+    <div class="brand-wrap" id="brandWrap">
+      <input
+        type="text" id="brandInput" class="brand-input"
+        placeholder="例：スナイデル、マックスマーラ、ユニクロ"
+        oninput="onBrandInput(this.value)"
+        autocomplete="off" autocorrect="off" spellcheck="false"
+      >
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+    <button class="btn-mercari" id="mercariBtn" onclick="openMercari()">🛍️ メルカリで検索</button>
+  </div>
+
+  <!-- ===== タブ ===== -->
   <div class="tab-bar">
-    <button class="tab active" id="tabPhoto" onclick="switchTab('photo')">📷 写真で判別</button>
-    <button class="tab" id="tabManual" onclick="switchTab('manual')">⌨️ 手入力で判別</button>
+    <button class="tab active" id="tabPhoto"  onclick="switchTab('photo')">📷 写真で判別</button>
+    <button class="tab"        id="tabManual" onclick="switchTab('manual')">⌨️ 手入力で判別</button>
   </div>
 
   <!-- ===== 写真モード ===== -->
@@ -390,18 +399,19 @@
     <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
       <div id="uploadPlaceholder">
         <div class="upload-icon">📷</div>
-        <div class="upload-text">タグ写真を撮る / 選ぶ</div>
+        <div class="upload-text">STEP 2 タグ写真を撮る / 選ぶ</div>
         <div class="upload-sub">内タグ・洗濯タグ・型番タグ</div>
       </div>
       <img id="preview" alt="プレビュー">
     </div>
-
     <input type="file" id="fileInput" accept="image/*" capture="environment">
+
+    <button class="btn-lens" id="lensBtn" onclick="openGoogleLens()">🔍 Googleレンズで開く</button>
 
     <div class="error-box" id="errorBox"></div>
 
     <button class="btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
-      判定する
+      年式を判別する
     </button>
 
     <div class="loading" id="loading">
@@ -413,7 +423,21 @@
       <div class="result-badge" id="resultBadge"></div>
       <div class="result-body">
         <div class="result-raw" id="resultRaw"></div>
-        <button class="btn-reset" onclick="resetPhoto()">📷 別の写真を撮る</button>
+
+        <!-- 信頼度「低」のとき表示される2枚目アップロード -->
+        <div class="low-conf-section" id="lowConfSection">
+          <p class="low-conf-msg">📸 別の角度の写真も送ってください（型番全体が見えるもの）</p>
+          <div class="upload-area-2" onclick="document.getElementById('fileInput2').click()">
+            <div id="uploadPlaceholder2">
+              <div class="upload-icon">📷</div>
+              <div class="upload-text">2枚目の写真を撮る / 選ぶ</div>
+            </div>
+            <img id="preview2" alt="2枚目プレビュー">
+          </div>
+          <input type="file" id="fileInput2" accept="image/*" capture="environment">
+        </div>
+
+        <button class="btn-reset" onclick="resetPhoto()">🔄 最初からやり直す</button>
       </div>
     </div>
 
@@ -422,49 +446,31 @@
   <!-- ===== 手入力モード ===== -->
   <div id="manualPanel" style="display:none">
 
-    <!-- STEP1: ブランド検索 -->
-    <div class="brand-search-section">
-      <span class="brand-label">STEP 1 ブランド名を入力</span>
-      <div class="brand-search-wrap" id="brandSearchWrap">
-        <input
-          type="text"
-          id="brandSearch"
-          class="brand-input"
-          placeholder="例：スナイデル、マックスマーラ"
-          oninput="onBrandInput(this.value)"
-          autocomplete="off"
-          autocorrect="off"
-          spellcheck="false"
-        >
-        <div class="suggestions" id="suggestions"></div>
-      </div>
+    <div class="manual-hint" id="manualHint">STEP 1 のブランド名を入力するとガイドが表示されます</div>
+
+    <div class="brand-not-found" id="brandNotFound">
+      ⚠️ このブランドは手入力モード非対応です。<br>写真モードでAIに判別させてください。
     </div>
 
-    <!-- STEP2: ガイド表示 -->
+    <!-- ガイド表示 -->
     <div class="brand-guide-card" id="brandGuideCard">
       <div class="brand-guide-title" id="guideBrandName"></div>
-      <div class="brand-guide-text" id="guideText"></div>
+      <div class="brand-guide-text"  id="guideText"></div>
     </div>
 
-    <!-- 特殊ブランド（入力不可） -->
+    <!-- 特殊ブランド（クリステンセンドゥノルドなど） -->
     <div class="special-card" id="specialCard">
       <p id="specialText"></p>
       <a id="googleSearchLink" href="#" target="_blank" class="btn-google">🔍 Googleで型番を検索する</a>
     </div>
 
-    <!-- STEP3: コード入力 -->
+    <!-- コード入力 -->
     <div class="code-input-section" id="codeInputSection">
-      <span class="code-label">STEP 3 タグの値を入力（即座に変換）</span>
+      <span class="step-label">STEP 2 タグの値を入力（即座に変換）</span>
       <input
-        type="text"
-        id="codeInput"
-        class="code-input"
-        placeholder=""
+        type="text" id="codeInput" class="code-input"
         oninput="onCodeInput(this.value)"
-        autocomplete="off"
-        autocorrect="off"
-        spellcheck="false"
-        maxlength="10"
+        autocomplete="off" autocorrect="off" spellcheck="false" maxlength="10"
       >
     </div>
 
@@ -479,656 +485,346 @@
 
   </div>
 
-</div>
+</div><!-- /container -->
 
 <script>
 // =============================================
 // ブランドデータ（61社）
 // =============================================
-
 function d1(v) {
-  // 1桁年式コード: 8=2018,9=2019,0=2020,1=2021,...,7=2027
   const m = {'0':2020,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026,'7':2027,'8':2018,'9':2019};
   return m[String(v).trim()] || null;
 }
-
 function d2(v) {
-  // 2桁年式コード: 17=2017, 18=2018, ..., 27=2027
   const n = parseInt(String(v).trim());
-  if (n >= 15 && n <= 50) return 2000 + n;
-  return null;
+  return (n >= 15 && n <= 50) ? 2000 + n : null;
 }
-
 function fy(year) {
   if (!year) return null;
-  let j = year >= 2023 ? 'buy' : year >= 2017 ? 'consider' : 'skip';
+  const j = year >= 2023 ? 'buy' : year >= 2017 ? 'consider' : 'skip';
   return { year: year + '年', yearNum: year, judgment: j };
 }
 
 const BRANDS = [
-  {
-    id:1, main:'オンワード樫山',
-    subs:['ニジュウサンク','クミキョク','ジユウク','ベイジ','アンフィーロ','アイシービー','トッカ','ジェイプレス','ポールスミスレディース','ジョゼフ','エイトン'],
-    guide:'型番のアルファベット1文字を入力してください\n変換例：G=2025、L=2026（10年周期で継続）',
-    placeholder:'G',
-    convert(v) {
-      const m = {H:2017,Y:2018,K:2019,B:2020,I:2021,N:2022,S:2023,C:2024,G:2025,L:2026};
-      return fy(m[v.trim().toUpperCase()] || null);
-    }
-  },
-  {
-    id:2, main:'ファーイーストカンパニー',
-    subs:['アナイ','アルアバイル','ルルウィルビー'],
-    guide:'型番の左から3,4桁目の数字2桁を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:3, main:'フォクシー',
-    subs:['フォクシーニューヨーク','アディアム','ベロアノワール','フォクシースポーツ'],
-    guide:'型番（数字5桁）の左から1,2桁目を入力してください\n例：45 → 2025年（37=2017〜）',
-    placeholder:'45',
-    convert(v) {
-      const n = parseInt(v.trim());
-      if (n >= 37 && n <= 60) return fy(2000 + (n - 20));
-      return null;
-    }
-  },
-  {
-    id:4, main:'フィルム',
-    subs:['ダブルスタンダードクロージング','ソブ','ディーヒム'],
-    guide:'型番の左から8,9桁目の数字を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:5, main:'ARTS&SCIENCE',
-    subs:[],
-    guide:'型番の2〜3桁目を入力してください\n2020SS以前：1桁（7=2017,8=2018,9=2019,0=2020SS）\n2020AW以降：2桁（20=2020AW、25=2025など）',
-    placeholder:'25',
-    convert(v) {
-      v = v.trim();
-      if (v.length === 1) {
-        const m = {'7':2017,'8':2018,'9':2019,'0':2020};
-        const yr = m[v];
-        if (yr) return { ...fy(yr), year: yr + (yr===2020 ? '年 春夏' : '年') };
-        return null;
-      }
-      const yr = d2(v);
-      if (yr) return { ...fy(yr), year: yr + '年 秋冬以降' };
-      return null;
-    }
-  },
-  {
-    id:6, main:'エムズグレイシー',
-    subs:[],
-    guide:'型番のハイフン右側1桁目を入力してください\n※洗濯マークも確認して年代を区別してください（例：4は2014年か2024年か）',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:7, main:'モンクレール',
-    subs:[],
-    guide:'型番の先頭アルファベット1文字を入力してください\n例：K=2025、L=2026\nDIND-表記の場合は続く数字2桁を入力（25=2025）',
-    placeholder:'K',
-    convert(v) {
-      v = v.trim().toUpperCase();
-      const lm = {C:2017,D:2018,E:2019,F:2020,G:2021,H:2022,I:2023,J:2024,K:2025,L:2026};
-      if (lm[v]) return fy(lm[v]);
-      const n = parseInt(v);
-      if (n >= 21 && n <= 40) return fy(2000 + n);
-      return null;
-    }
-  },
-  {
-    id:8, main:'TATRAS',
-    subs:[],
-    guide:'型番の5,6桁目の数字を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:9, main:'BIGI',
-    subs:['ビギ','ヨシエイナバ'],
-    guide:'型番の左から4番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:10, main:'メルローズ',
-    subs:['ピンクハウス','ティアラ'],
-    guide:'型番の左から4番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:11, main:'ラルフローレン',
-    subs:['ローレンラルフローレン','ポロラルフローレン'],
-    guide:'QRコードをスキャン → HP → more detail → date の日付を入力してください\nQRなし：洗濯マークの年代を確認してください',
-    placeholder:'2025-08-01',
-    convert(v) {
-      const m = v.match(/(\d{4})/);
-      if (m) return { ...fy(parseInt(m[1])), year: v + '（製造日）' };
-      return { year: v + '（参考）', yearNum: null, judgment: 'consider' };
-    }
-  },
-  {
-    id:12, main:'ルネ',
-    subs:[],
-    guide:'型番の左から2番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:13, main:'ヘルノ',
-    subs:[],
-    guide:'EACタグに記載の発売日（月/年形式）を入力してください\n例：03/2025',
-    placeholder:'03/2025',
-    convert(v) {
-      const m = v.match(/(\d{4})/);
-      if (m) return { ...fy(parseInt(m[1])), year: v + '（発売日）' };
-      return null;
-    }
-  },
-  {
-    id:14, main:'ワールド',
-    subs:['クードシャンス','ドレステリア','リフレクト','インディヴィ','アンタイトル','タケオキクチ'],
-    guide:'型番のハイフン横2番目の数字を入力してください\n2=2025SS、3=2025AW、4=2026SS、6=2023SS、7=2023AW、8=2024SS、9=2024AW',
-    placeholder:'9',
-    convert(v) {
-      const map = {
-        '2':{ label:'2025SS', year:2025 },
-        '3':{ label:'2025AW', year:2025 },
-        '4':{ label:'2026SS または 2022SS', year:2026, note:'4は2022SSまたは2026SSの可能性あり。洗濯マークで年代を区別してください' },
-        '5':{ label:'2022AW', year:2022 },
-        '6':{ label:'2023SS', year:2023 },
-        '7':{ label:'2023AW', year:2023 },
-        '8':{ label:'2024SS', year:2024 },
-        '9':{ label:'2024AW', year:2024 },
-      };
-      const e = map[v.trim()];
-      if (!e) return null;
-      return { year:e.label+'年', yearNum:e.year, judgment:e.year>=2023?'buy':'consider', note:e.note||'' };
-    }
-  },
-  {
-    id:15, main:'東京ソワール',
-    subs:[],
-    guide:'型番の末尾2桁を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:16, main:'ボウルズ',
-    subs:['ハイク'],
-    guide:'型番の左から1,2桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:17, main:'レリアン',
-    subs:['ネミカ','キャラオクルス'],
-    guide:'ILに続く数字の2番目を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:18, main:'サザビーリーグ',
-    subs:['エブール','フランクアンドアイリーン','ロンハーマン','エストネーション'],
-    guide:'エブール/フランクアンドアイリーン/ロンハーマン：型番の1,2桁目を入力（41=2025SS、43=2026SS）\nエストネーション：型番の1桁目を入力（5=2025）',
-    placeholder:'41',
-    convert(v) {
-      v = v.trim();
-      if (v.length >= 2) {
-        const map = {35:'2022SS',36:'2022AW',37:'2023SS',38:'2023AW',39:'2024SS',40:'2024AW',41:'2025SS',42:'2025AW',43:'2026SS'};
-        const label = map[parseInt(v)];
-        if (label) {
-          const yr = parseInt(label);
-          return { year: label+'年', yearNum: yr, judgment: yr>=2023?'buy':'consider' };
-        }
-      } else {
-        return fy(d1(v));
-      }
-      return null;
-    }
-  },
-  {
-    id:19, main:'パル',
-    subs:['ギャラルダギャランテ','イアパピヨネ','ビアズリー','ルイス','ウィムガゼット','ミスティック'],
-    guide:'2018AW以降：アルファベットに続く数字の3桁目（1桁）を入力してください\n2018SS以前：数字2桁を入力してください\n例：5=2025（3桁目）または 24=2024（2桁）',
-    placeholder:'5',
-    convert(v) {
-      v = v.trim();
-      if (v.length <= 1) return fy(d1(v));
-      return fy(d2(v));
-    }
-  },
-  {
-    id:20, main:'ランバンコレクション',
-    subs:[],
-    guide:'23SS以前：左から2番目の数字を入力してください\n23AW以降：MKの数字2桁目を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:21, main:'サカイ',
-    subs:['サカイラック'],
-    guide:'型番の左から1,2桁目の数字を入力してください\n会社名がSCWの場合：ADに続く4桁の年号を入力してください\n例：25 → 2025年、または 2025',
-    placeholder:'25',
-    convert(v) {
-      v = v.trim().replace(/^AD/i, '');
-      if (v.length === 4) return fy(parseInt(v));
-      return fy(d2(v));
-    }
-  },
-  {
-    id:22, main:'マザーズインダストリー',
-    subs:['ミズイロインド','ミディウミ','ミディウミソリッド','マーマーマー'],
-    guide:'型番の左から3,4桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:23, main:'ケーツークロージング',
-    subs:['ヨリ'],
-    guide:'2022以前：YRに続く2桁を入力してください\n2023以降：ハイフンに続く1,2桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:24, main:'カイタックインターナショナル',
-    subs:['パラスパレス'],
-    guide:'カイタックインターナショナル：ハイフン右側1桁目を入力（5=2025）\nパラスパレス：アルファベットに続く2桁を入力（25=2025）',
-    placeholder:'5',
-    convert(v) {
-      v = v.trim();
-      if (v.length <= 1) return fy(d1(v));
-      return fy(d2(v));
-    }
-  },
-  {
-    id:25, main:'ファーストリテイリング',
-    subs:['ユニクロ'],
-    guide:'型番の( - )の中の左から1番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:26, main:'シンゾーン',
-    subs:[],
-    guide:'NOに続く1,2桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:27, main:'エイネット',
-    subs:['ツモリチサト','ズッカ','プランテーション'],
-    guide:'型番の左から3番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:28, main:'イッセイミヤケ',
-    subs:['プリーツプリーズ','オムプリッセ','イッセイミヤケミー','ハート'],
-    guide:'型番の左から3番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:29, main:'ボーダーズアットバルコニー',
-    subs:[],
-    guide:'BDに続く1,2番目の数字を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:30, main:'ネストローブ',
-    subs:[],
-    guide:'型番の左から3,4桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:31, main:'トゥモローランド',
-    subs:['ボールジィ','キャバン','ギャルリーヴィー','マカフィ','デプレ','ドリスヴァンノッテン'],
-    guide:'ハイフンを除いた左から5番目の数字を入力してください\n9=2019、1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
-  {
-    id:32, main:'オッジインターナショナル',
-    subs:['レナウン','アクアスキュータム','ダーバン','トクコプルミエヴォル'],
-    guide:'型番末尾付近の2桁の数字を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:33, main:'リンク・セオリー・ジャパン',
-    subs:['セオリー','セオリーリュクス'],
-    guide:'ハイフンに続く1桁目の数字を入力してください\n9=2019、1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
-  {
-    id:34, main:'スタッフインターナショナル',
-    subs:['メゾンマルジェラ','マルタンマルジェラ'],
-    guide:'ADに続く4桁の年号を入力してください。続けてその後ろの2桁（季節）も入力してください\n例：202502 → 2025年秋冬',
-    placeholder:'202502',
-    convert(v) {
-      v = v.trim().replace(/^AD/i, '').replace(/\s+/g, '');
-      const m = v.match(/^(20\d{2})(0[12])?$/);
-      if (!m) return null;
-      const yr = parseInt(m[1]);
-      const season = m[2] === '01' ? '春夏' : m[2] === '02' ? '秋冬' : '';
-      return { ...fy(yr), year: yr + '年' + (season ? ' ' + season : '') };
-    }
-  },
-  {
-    id:35, main:'anuans',
-    subs:['アニュアンス'],
-    guide:'型番の左から3,4桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:36, main:'アニエスベー',
-    subs:[],
-    guide:'Hの横の数字2桁を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:37, main:'オーラリー',
-    subs:[],
-    guide:'2019年以前：左2桁目の1桁を入力してください（6=2016、7=2017、8=2018）\n2020年以降：左3,4桁目の2桁を入力してください（25=2025）',
-    placeholder:'25',
-    convert(v) {
-      v = v.trim();
-      if (v.length === 1) {
-        const m = {'6':2016,'7':2017,'8':2018};
-        return fy(m[v] || null);
-      }
-      return fy(d2(v));
-    }
-  },
-  {
-    id:38, main:'ビキジャパン',
-    subs:['ピッコーネ','アルチビオ'],
-    guide:'Fに続く1桁目の数字を入力してください\n9=2019、1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
-  {
-    id:39, main:'ヨーガンレール',
-    subs:['ババグーリ'],
-    guide:'アルファベットを含めた左から4番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:40, main:'クリステンセンドゥノルド',
-    subs:[],
+  { id:1, main:'オンワード樫山', subs:['ニジュウサンク','クミキョク','ジユウク','ベイジ','アンフィーロ','アイシービー','トッカ','ジェイプレス','ポールスミスレディース','ジョゼフ','エイトン'],
+    guide:'型番のアルファベット1文字を入力\nH=2017 Y=2018 K=2019 B=2020 I=2021 N=2022 S=2023 C=2024 G=2025 L=2026（10年周期）', placeholder:'G',
+    convert(v){const m={H:2017,Y:2018,K:2019,B:2020,I:2021,N:2022,S:2023,C:2024,G:2025,L:2026};return fy(m[v.trim().toUpperCase()]||null);}},
+  { id:2, main:'ファーイーストカンパニー', subs:['アナイ','アルアバイル','ルルウィルビー'],
+    guide:'型番の左から3,4桁目の数字2桁を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:3, main:'フォクシー', subs:['フォクシーニューヨーク','アディアム','ベロアノワール','フォクシースポーツ'],
+    guide:'型番（数字5桁）の左から1,2桁目を入力\n37=2017〜 46=2026（以降継続）', placeholder:'45',
+    convert(v){const n=parseInt(v.trim());return(n>=37&&n<=60)?fy(2000+(n-20)):null;}},
+  { id:4, main:'フィルム', subs:['ダブルスタンダードクロージング','ソブ','ディーヒム'],
+    guide:'型番の左から8,9桁目の数字を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:5, main:'ARTS&SCIENCE', subs:[],
+    guide:'2020SS以前：2桁目1文字を入力（7=2017 8=2018 9=2019 0=2020SS）\n2020AW以降：2,3桁目の2桁を入力（20=2020AW 25=2025）', placeholder:'25',
+    convert(v){v=v.trim();if(v.length===1){const m={'7':2017,'8':2018,'9':2019,'0':2020};const yr=m[v];return yr?{...fy(yr),year:yr+(yr===2020?'年 春夏':'年')}:null;}const yr=d2(v);return yr?{...fy(yr),year:yr+'年 秋冬以降'}:null;}},
+  { id:6, main:'エムズグレイシー', subs:[],
+    guide:'型番のハイフン右側1桁目を入力\n※洗濯マークも確認して年代を区別してください', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:7, main:'モンクレール', subs:[],
+    guide:'型番の先頭アルファベット1文字を入力\nC=2017 D=2018 E=2019 F=2020 G=2021 H=2022 I=2023 J=2024 K=2025 L=2026\nDIND-表記なら続く2桁の数字を入力（25=2025）', placeholder:'K',
+    convert(v){v=v.trim().toUpperCase();const lm={C:2017,D:2018,E:2019,F:2020,G:2021,H:2022,I:2023,J:2024,K:2025,L:2026};if(lm[v])return fy(lm[v]);const n=parseInt(v);return(n>=21&&n<=40)?fy(2000+n):null;}},
+  { id:8, main:'TATRAS', subs:[],
+    guide:'型番の5,6桁目の数字を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:9, main:'BIGI', subs:['ビギ','ヨシエイナバ'],
+    guide:'型番の左から4番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:10, main:'メルローズ', subs:['ピンクハウス','ティアラ'],
+    guide:'型番の左から4番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:11, main:'ラルフローレン', subs:['ローレンラルフローレン','ポロラルフローレン'],
+    guide:'QRコードをスキャン → HP → more detail → date の日付を入力\nQRなしの場合は洗濯マークの年代を目視確認', placeholder:'2025-08-01',
+    convert(v){const m=v.match(/(\d{4})/);if(m)return{...fy(parseInt(m[1])),year:v+'（製造日）'};return{year:v+'（参考）',yearNum:null,judgment:'consider'};}},
+  { id:12, main:'ルネ', subs:[],
+    guide:'型番の左から2番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:13, main:'ヘルノ', subs:[],
+    guide:'EACタグに記載の発売日（月/年形式）を入力\n例：03/2025', placeholder:'03/2025',
+    convert(v){const m=v.match(/(\d{4})/);return m?{...fy(parseInt(m[1])),year:v+'（発売日）'}:null;}},
+  { id:14, main:'ワールド', subs:['クードシャンス','ドレステリア','リフレクト','インディヴィ','アンタイトル','タケオキクチ'],
+    guide:'型番のハイフン横2番目の数字を入力\n2=2025SS 3=2025AW 4=2026SS 6=2023SS 7=2023AW 8=2024SS 9=2024AW', placeholder:'9',
+    convert(v){const map={'2':{l:'2025SS',y:2025},'3':{l:'2025AW',y:2025},'4':{l:'2026SS または 2022SS',y:2026,note:'洗濯マークで年代を区別してください'},'5':{l:'2022AW',y:2022},'6':{l:'2023SS',y:2023},'7':{l:'2023AW',y:2023},'8':{l:'2024SS',y:2024},'9':{l:'2024AW',y:2024}};const e=map[v.trim()];return e?{year:e.l+'年',yearNum:e.y,judgment:e.y>=2023?'buy':'consider',note:e.note||''}:null;}},
+  { id:15, main:'東京ソワール', subs:[],
+    guide:'型番の末尾2桁を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:16, main:'ボウルズ', subs:['ハイク'],
+    guide:'型番の左から1,2桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:17, main:'レリアン', subs:['ネミカ','キャラオクルス'],
+    guide:'ILに続く数字の2番目を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:18, main:'サザビーリーグ', subs:['エブール','フランクアンドアイリーン','ロンハーマン','エストネーション'],
+    guide:'エブール/フランクアンドアイリーン/ロンハーマン：型番の1,2桁目を入力\n41=2025SS 42=2025AW 43=2026SS\nエストネーション：型番の1桁目を入力（5=2025）', placeholder:'41',
+    convert(v){v=v.trim();if(v.length>=2){const map={35:'2022SS',36:'2022AW',37:'2023SS',38:'2023AW',39:'2024SS',40:'2024AW',41:'2025SS',42:'2025AW',43:'2026SS'};const l=map[parseInt(v)];if(l){const yr=parseInt(l);return{year:l+'年',yearNum:yr,judgment:yr>=2023?'buy':'consider'};}}else{return fy(d1(v));}return null;}},
+  { id:19, main:'パル', subs:['ギャラルダギャランテ','イアパピヨネ','ビアズリー','ルイス','ウィムガゼット','ミスティック'],
+    guide:'2018AW以降：アルファベットに続く数字の3桁目（1桁）を入力\n2018SS以前：数字2桁を入力', placeholder:'5',
+    convert(v){v=v.trim();return v.length<=1?fy(d1(v)):fy(d2(v));}},
+  { id:20, main:'ランバンコレクション', subs:[],
+    guide:'23SS以前：左から2番目の数字を入力\n23AW以降：MKの数字2桁目を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:21, main:'サカイ', subs:['サカイラック'],
+    guide:'型番の左から1,2桁目の数字を入力\n会社名がSCWなら ADに続く4桁の年号を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){v=v.trim().replace(/^AD/i,'');return v.length===4?fy(parseInt(v)):fy(d2(v));}},
+  { id:22, main:'マザーズインダストリー', subs:['ミズイロインド','ミディウミ','ミディウミソリッド','マーマーマー'],
+    guide:'型番の左から3,4桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:23, main:'ケーツークロージング', subs:['ヨリ'],
+    guide:'2022以前：YRに続く2桁を入力\n2023以降：ハイフンに続く1,2桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:24, main:'カイタックインターナショナル', subs:['パラスパレス'],
+    guide:'カイタック：ハイフン右側1桁目を入力（5=2025）\nパラスパレス：アルファベットに続く2桁を入力（25=2025）', placeholder:'5',
+    convert(v){v=v.trim();return v.length<=1?fy(d1(v)):fy(d2(v));}},
+  { id:25, main:'ファーストリテイリング', subs:['ユニクロ'],
+    guide:'型番の( - )の中の左から1番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:26, main:'シンゾーン', subs:[],
+    guide:'NOに続く1,2桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:27, main:'エイネット', subs:['ツモリチサト','ズッカ','プランテーション'],
+    guide:'型番の左から3番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:28, main:'イッセイミヤケ', subs:['プリーツプリーズ','オムプリッセ','イッセイミヤケミー','ハート'],
+    guide:'型番の左から3番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:29, main:'ボーダーズアットバルコニー', subs:[],
+    guide:'BDに続く1,2番目の数字を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:30, main:'ネストローブ', subs:[],
+    guide:'型番の左から3,4桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:31, main:'トゥモローランド', subs:['ボールジィ','キャバン','ギャルリーヴィー','マカフィ','デプレ','ドリスヴァンノッテン'],
+    guide:'ハイフンを除いた左から5番目の数字を入力\n9=2019 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
+  { id:32, main:'オッジインターナショナル', subs:['レナウン','アクアスキュータム','ダーバン','トクコプルミエヴォル'],
+    guide:'型番末尾付近の2桁の数字を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:33, main:'リンク・セオリー・ジャパン', subs:['セオリー','セオリーリュクス'],
+    guide:'ハイフンに続く1桁目の数字を入力\n9=2019 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
+  { id:34, main:'スタッフインターナショナル', subs:['メゾンマルジェラ','マルタンマルジェラ'],
+    guide:'ADに続く4桁の年号と後ろの2桁（季節）を続けて入力\n例：202501=2025年春夏 202502=2025年秋冬', placeholder:'202502',
+    convert(v){v=v.trim().replace(/^AD/i,'').replace(/\s+/g,'');const m=v.match(/^(20\d{2})(0[12])?$/);if(!m)return null;const yr=parseInt(m[1]);const s=m[2]==='01'?'春夏':m[2]==='02'?'秋冬':'';return{...fy(yr),year:yr+'年'+(s?' '+s:'')};}},
+  { id:35, main:'anuans', subs:['アニュアンス'],
+    guide:'型番の左から3,4桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:36, main:'アニエスベー', subs:[],
+    guide:'Hの横の数字2桁を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:37, main:'オーラリー', subs:[],
+    guide:'2019年以前：左2桁目（1桁）を入力（6=2016 7=2017 8=2018）\n2020年以降：左3,4桁目（2桁）を入力（25=2025）', placeholder:'25',
+    convert(v){v=v.trim();if(v.length===1){const m={'6':2016,'7':2017,'8':2018};return fy(m[v]||null);}return fy(d2(v));}},
+  { id:38, main:'ビキジャパン', subs:['ピッコーネ','アルチビオ'],
+    guide:'Fに続く1桁目の数字を入力\n9=2019 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
+  { id:39, main:'ヨーガンレール', subs:['ババグーリ'],
+    guide:'アルファベットを含めた左から4番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:40, main:'クリステンセンドゥノルド', subs:[], isSpecial:true,
     guide:'このブランドは型番から直接年式を判別できません。型番をGoogleで検索してブログの日付を確認してください。',
-    placeholder:'',
-    isSpecial: true,
-    convert(v) { return null; }
-  },
-  {
-    id:41, main:'BEAMS',
-    subs:['ビームス'],
-    guide:'型番左端付近の2桁の数字を入力してください（記載がない場合もあります）\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:42, main:'コムデギャルソン',
-    subs:['ジュンヤワタナベ','ノワールケイニノミヤ'],
-    guide:'ADに続く4桁の数字を入力してください\n例：2025 → 2025年',
-    placeholder:'2025',
-    convert(v) {
-      const n = parseInt(v.trim().replace(/^AD/i, ''));
-      if (n >= 2015 && n <= 2035) return fy(n);
-      return null;
-    }
-  },
-  {
-    id:43, main:'マッシュスタイルラボ',
-    subs:['スナイデル','フレイアイディー','ミラオーウェン','リリーブラウン','エミ','ファーファー','スタイリング','ジェラートピケ','セルフォード','ミースロエ'],
-    guide:'型番の左から5,6桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:44, main:'マツオインターナショナル',
-    subs:['ジウ','メフウ','イオコムイオ','センソユニコ','キューブキューブ','イム','ディダブルトゥアール','ルクルカ','ジェイブランシェ','ヴィヴィアンタム'],
-    guide:'NO.に続く左から2番目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:45, main:'TSI',
-    subs:['アドーア','マーガレットハウエル','エムエイチエル','パーリーゲイツ','ジャックバニー','キャロウェイ','ルフィル','ジルスチュアート','イレーヴ','ピンキーアンドダイアン','ナチュラルビューティーベーシック','ダイアンフォンファステンバーグ','マスターバニーエディション'],
-    guide:'ハイフンに続く1桁目の数字を入力してください\n例：5=2025、6=2026',
-    placeholder:'5',
-    convert(v) { return fy(d1(v)); }
-  },
-  {
-    id:46, main:'ベイクルーズ',
-    subs:['スローブイエナ','スピックアンドスパン','ノーブル','フレームワーク','ドゥーズィエムクラス','ミューズ','アパルトモン','ジャーナルスタンダード','レリューム','プラージュ','ヴェルメイユパーイエナ','ラ・トータリテ','ジョイントワークス'],
-    guide:'NO.に続く1,2桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:47, main:'アイランド',
-    subs:['ダイアグラム','グレースコンチネンタル','グレースクラス'],
-    guide:'2019年以前：左4桁の2桁目（1桁）を入力してください（7=2017、8=2018、9=2019）\n2020年以降：左5桁の3,4桁目（2桁）を入力してください（25=2025）',
-    placeholder:'25',
-    convert(v) {
-      v = v.trim();
-      if (v.length === 1) {
-        const m = {'7':2017,'8':2018,'9':2019};
-        return fy(m[v] || null);
-      }
-      return fy(d2(v));
-    }
-  },
-  {
-    id:48, main:'flappers',
-    subs:['ティッカ'],
-    guide:'型番の左から3番目の数字を入力してください\n8=2018、0=2020、1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'8':2018,'0':2020,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
-  {
-    id:49, main:'ミナ',
-    subs:['ミナペルホネン'],
-    guide:'型番の左1,2番目を入力してください（アルファベット）\nV=2017、W=2018、X=2019、Y=2020、Z=2021、aa=2022、ab=2023、ac=2024、ad=2025、ae=2026',
-    placeholder:'ad',
-    convert(v) {
-      const key = v.trim().toLowerCase();
-      const m = {v:2017,w:2018,x:2019,y:2020,z:2021,aa:2022,ab:2023,ac:2024,ad:2025,ae:2026};
-      return fy(m[key] || null);
-    }
-  },
-  {
-    id:50, main:'MADISONBLUE',
-    subs:['マディソンブルー'],
-    guide:'MDに続く2桁を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v.trim().replace(/^MD/i, ''))); }
-  },
-  {
-    id:51, main:'LIFE s',
-    subs:['トゥデイフル'],
-    guide:'型番の左2,3番目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:52, main:'ブルネロクチネリ',
-    subs:[],
-    guide:'型番の該当部分の数字を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:53, main:'マメクロゴウチ',
-    subs:[],
-    guide:'MMに続く2桁を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v.trim().replace(/^MM/i, ''))); }
-  },
-  {
-    id:54, main:'エトロジャパン',
-    subs:[],
-    guide:'型番の2桁目の数字を入力してください（洗濯マークで年代を区別）\nEACタグのдата производстваがある場合はその日付を入力してください',
-    placeholder:'5',
-    convert(v) {
-      v = v.trim();
-      if (v.includes('/') && v.length > 4) {
-        const m = v.match(/(\d{4})/);
-        if (m) return { ...fy(parseInt(m[1])), year: v + '（発売日）' };
-      }
-      return fy(d1(v));
-    }
-  },
-  {
-    id:55, main:'ジョイックス',
-    subs:['ランバンメンズ','ヴィヴィアンウエストウッドマン','ポールスミスメンズ','サイコバニー'],
-    guide:'MK横の型番：1桁目（1=春夏、2=秋冬）と2桁目（年式）を続けて2桁で入力してください\n例：15 → 春夏・2025年、25 → 秋冬・2025年',
-    placeholder:'15',
-    convert(v) {
-      v = v.trim();
-      if (v.length < 2) return null;
-      const season = v[0]==='1' ? '春夏' : v[0]==='2' ? '秋冬' : '';
-      const yr = d1(v[1]);
-      if (!yr) return null;
-      return { ...fy(yr), year: yr + '年' + (season ? ' ' + season : '') };
-    }
-  },
-  {
-    id:56, main:'バロックジャパンリミテッド',
-    subs:['エンフォルド','ナゴンスタンス'],
-    guide:'数字の場合：タグの数字をそのまま入力（年式=数字+7で計算）\nアルファベットの場合：そのまま入力\n例：A=2017、H=2024、I=2025、J=2026',
-    placeholder:'I',
-    convert(v) {
-      v = v.trim();
-      if (/^[A-Za-z]$/.test(v)) {
-        const m = {A:2017,B:2018,C:2019,D:2020,E:2021,F:2022,G:2023,H:2024,I:2025,J:2026};
-        return fy(m[v.toUpperCase()] || null);
-      }
-      const n = parseInt(v);
-      if (!isNaN(n) && n >= 0) return fy(2007 + n);
-      return null;
-    }
-  },
-  {
-    id:57, main:'マックスマーラ',
-    subs:['マックスアンドコー','ウィークエンドマックスマーラ','マックスマーラステュディオ','エスマックスマーラ'],
-    guide:'дата производстваに記載の日付を入力してください\n例：12/10/2025',
-    placeholder:'12/10/2025',
-    convert(v) {
-      const m = v.match(/(\d{4})/);
-      if (m) return { ...fy(parseInt(m[1])), year: v + '（発売日）' };
-      return null;
-    }
-  },
-  {
-    id:58, main:'ヨーコチャン',
-    subs:[],
-    guide:'ハイフンに続く2,3桁目を入力してください\n例：25 → 2025年',
-    placeholder:'25',
-    convert(v) { return fy(d2(v)); }
-  },
-  {
-    id:59, main:'Pasand/lucifer research',
-    subs:['ヌキテパ','サラマリカ','マーラカランコエ'],
-    guide:'型番の左から5番目の数字を入力してください\n1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
-  {
-    id:60, main:'インターリブ',
-    subs:['サクラ'],
-    guide:'型番の左から3番目の数字を入力してください\n1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
-  {
-    id:61, main:'アルページュ',
-    subs:['アルページュストーリー','カデュネ','マイストラーダ','リランドチュール','アプワイザーリッシェ','ジャスグリッティ'],
-    guide:'型番の左から2番目の数字を入力してください\n1=2021、2=2022、3=2023、4=2024、5=2025、6=2026',
-    placeholder:'5',
-    convert(v) {
-      const m = {'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};
-      return fy(m[v.trim()] || null);
-    }
-  },
+    placeholder:'', convert(){return null;}},
+  { id:41, main:'BEAMS', subs:['ビームス'],
+    guide:'型番左端付近の2桁の数字を入力（記載がない場合もあります）\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:42, main:'コムデギャルソン', subs:['ジュンヤワタナベ','ノワールケイニノミヤ'],
+    guide:'ADに続く4桁の数字を入力\n例：2025 → 2025年', placeholder:'2025',
+    convert(v){const n=parseInt(v.trim().replace(/^AD/i,''));return(n>=2015&&n<=2035)?fy(n):null;}},
+  { id:43, main:'マッシュスタイルラボ', subs:['スナイデル','フレイアイディー','ミラオーウェン','リリーブラウン','エミ','ファーファー','スタイリング','ジェラートピケ','セルフォード','ミースロエ'],
+    guide:'型番の左から5,6桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:44, main:'マツオインターナショナル', subs:['ジウ','メフウ','イオコムイオ','センソユニコ','キューブキューブ','イム','ディダブルトゥアール','ルクルカ','ジェイブランシェ','ヴィヴィアンタム'],
+    guide:'NO.に続く左から2番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:45, main:'TSI', subs:['アドーア','マーガレットハウエル','エムエイチエル','パーリーゲイツ','ジャックバニー','キャロウェイ','ルフィル','ジルスチュアート','イレーヴ','ピンキーアンドダイアン','ナチュラルビューティーベーシック','ダイアンフォンファステンバーグ','マスターバニーエディション'],
+    guide:'ハイフンに続く1桁目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
+    convert(v){return fy(d1(v));}},
+  { id:46, main:'ベイクルーズ', subs:['スローブイエナ','スピックアンドスパン','ノーブル','フレームワーク','ドゥーズィエムクラス','ミューズ','アパルトモン','ジャーナルスタンダード','レリューム','プラージュ','ヴェルメイユパーイエナ','ラ・トータリテ','ジョイントワークス'],
+    guide:'NO.に続く1,2桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:47, main:'アイランド', subs:['ダイアグラム','グレースコンチネンタル','グレースクラス'],
+    guide:'2019年以前：左4桁の2桁目（1桁）を入力（7=2017 8=2018 9=2019）\n2020年以降：左5桁の3,4桁目（2桁）を入力（25=2025）', placeholder:'25',
+    convert(v){v=v.trim();if(v.length===1){const m={'7':2017,'8':2018,'9':2019};return fy(m[v]||null);}return fy(d2(v));}},
+  { id:48, main:'flappers', subs:['ティッカ'],
+    guide:'型番の左から3番目の数字を入力\n8=2018 0=2020 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'8':2018,'0':2020,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
+  { id:49, main:'ミナ', subs:['ミナペルホネン'],
+    guide:'型番の左1,2番目を入力（アルファベット）\nV=2017 W=2018 X=2019 Y=2020 Z=2021 aa=2022 ab=2023 ac=2024 ad=2025 ae=2026', placeholder:'ad',
+    convert(v){const k=v.trim().toLowerCase();const m={v:2017,w:2018,x:2019,y:2020,z:2021,aa:2022,ab:2023,ac:2024,ad:2025,ae:2026};return fy(m[k]||null);}},
+  { id:50, main:'MADISONBLUE', subs:['マディソンブルー'],
+    guide:'MDに続く2桁を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v.trim().replace(/^MD/i,'')));}},
+  { id:51, main:'LIFE s', subs:['トゥデイフル'],
+    guide:'型番の左2,3番目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:52, main:'ブルネロクチネリ', subs:[],
+    guide:'型番の該当部分の数字を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:53, main:'マメクロゴウチ', subs:[],
+    guide:'MMに続く2桁を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v.trim().replace(/^MM/i,'')));}},
+  { id:54, main:'エトロジャパン', subs:[],
+    guide:'型番の2桁目の数字を入力（洗濯マークで年代を区別）\nEACタグのдата производстваがあればその日付を入力', placeholder:'5',
+    convert(v){v=v.trim();if(v.includes('/')&&v.length>4){const m=v.match(/(\d{4})/);if(m)return{...fy(parseInt(m[1])),year:v+'（発売日）'};}return fy(d1(v));}},
+  { id:55, main:'ジョイックス', subs:['ランバンメンズ','ヴィヴィアンウエストウッドマン','ポールスミスメンズ','サイコバニー'],
+    guide:'MK横の型番：1桁目（1=春夏 2=秋冬）と2桁目（年式）を2桁で入力\n例：15 → 春夏・2025年', placeholder:'15',
+    convert(v){v=v.trim();if(v.length<2)return null;const s=v[0]==='1'?'春夏':v[0]==='2'?'秋冬':'';const yr=d1(v[1]);return yr?{...fy(yr),year:yr+'年'+(s?' '+s:'')}:null;}},
+  { id:56, main:'バロックジャパンリミテッド', subs:['エンフォルド','ナゴンスタンス'],
+    guide:'アルファベット→そのまま入力（A=2017 B=2018 … I=2025 J=2026）\n数字→タグの数字をそのまま入力（年式=数字+7）', placeholder:'I',
+    convert(v){v=v.trim();if(/^[A-Za-z]$/.test(v)){const m={A:2017,B:2018,C:2019,D:2020,E:2021,F:2022,G:2023,H:2024,I:2025,J:2026};return fy(m[v.toUpperCase()]||null);}const n=parseInt(v);return!isNaN(n)?fy(2007+n):null;}},
+  { id:57, main:'マックスマーラ', subs:['マックスアンドコー','ウィークエンドマックスマーラ','マックスマーラステュディオ','エスマックスマーラ'],
+    guide:'дата производстваに記載の日付を入力\n例：12/10/2025', placeholder:'12/10/2025',
+    convert(v){const m=v.match(/(\d{4})/);return m?{...fy(parseInt(m[1])),year:v+'（発売日）'}:null;}},
+  { id:58, main:'ヨーコチャン', subs:[],
+    guide:'ハイフンに続く2,3桁目を入力\n例：25 → 2025年', placeholder:'25',
+    convert(v){return fy(d2(v));}},
+  { id:59, main:'Pasand/lucifer research', subs:['ヌキテパ','サラマリカ','マーラカランコエ'],
+    guide:'型番の左から5番目の数字を入力\n1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
+  { id:60, main:'インターリブ', subs:['サクラ'],
+    guide:'型番の左から3番目の数字を入力\n1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
+  { id:61, main:'アルページュ', subs:['アルページュストーリー','カデュネ','マイストラーダ','リランドチュール','アプワイザーリッシェ','ジャスグリッティ'],
+    guide:'型番の左から2番目の数字を入力\n1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
+    convert(v){const m={'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
 ];
 
-// オートコンプリートインデックス構築
+// オートコンプリートインデックス
 const BRAND_INDEX = [];
 BRANDS.forEach(b => {
-  BRAND_INDEX.push({ name: b.main, parentName: null, brand: b });
-  b.subs.forEach(s => {
-    BRAND_INDEX.push({ name: s, parentName: b.main, brand: b });
+  BRAND_INDEX.push({ name: b.main, parent: null, brand: b });
+  b.subs.forEach(s => BRAND_INDEX.push({ name: s, parent: b.main, brand: b }));
+});
+
+// =============================================
+// 状態変数
+// =============================================
+let imageData = null, imageType = null;
+let imageData2 = null, imageType2 = null;
+let originalFile = null;
+let selectedBrand = null;
+let currentTab = 'photo';
+
+// =============================================
+// ブランド入力（共通）
+// =============================================
+function onBrandInput(val) {
+  const trimmed = val.trim();
+
+  // メルカリボタン
+  document.getElementById('mercariBtn').style.display = trimmed ? 'block' : 'none';
+
+  // 写真モード判別ボタン更新
+  updateAnalyzeBtn();
+
+  // ブランド選択：完全一致で自動セット
+  selectedBrand = null;
+  if (trimmed) {
+    const tl = trimmed.toLowerCase();
+    const exact = BRAND_INDEX.find(i => i.name.toLowerCase() === tl);
+    if (exact) selectedBrand = exact.brand;
+  }
+
+  // サジェスト表示
+  showSuggestions(val);
+
+  // 手入力モードのパネル更新
+  if (currentTab === 'manual') updateManualPanel();
+
+  // ブランドが変わったら手入力結果・コードリセット
+  document.getElementById('manualResultCard').style.display = 'none';
+  document.getElementById('codeInput').value = '';
+}
+
+function showSuggestions(val) {
+  const sugEl = document.getElementById('suggestions');
+  const q = val.trim().toLowerCase();
+  if (!q) { sugEl.style.display = 'none'; sugEl.innerHTML = ''; return; }
+
+  const hits = BRAND_INDEX.filter(i => i.name.toLowerCase().includes(q)).slice(0, 8);
+  if (!hits.length) { sugEl.style.display = 'none'; sugEl.innerHTML = ''; return; }
+
+  sugEl.innerHTML = hits.map((item, i) =>
+    `<div class="sug-item" data-i="${i}">
+      ${item.name}
+      ${item.parent ? `<span class="sug-sub">→ ${item.parent}</span>` : ''}
+    </div>`
+  ).join('');
+
+  sugEl.querySelectorAll('.sug-item').forEach((el, i) => {
+    const pick = (e) => { e.preventDefault(); e.stopPropagation(); selectBrand(hits[i]); };
+    el.addEventListener('mousedown', pick);
+    el.addEventListener('touchend',  pick);
   });
+
+  sugEl.style.display = 'block';
+}
+
+function selectBrand(item) {
+  selectedBrand = item.brand;
+  document.getElementById('brandInput').value = item.name;
+  document.getElementById('mercariBtn').style.display = 'block';
+  document.getElementById('suggestions').style.display = 'none';
+  document.getElementById('suggestions').innerHTML = '';
+  updateAnalyzeBtn();
+  document.getElementById('manualResultCard').style.display = 'none';
+  document.getElementById('codeInput').value = '';
+  if (currentTab === 'manual') updateManualPanel();
+}
+
+function openMercari() {
+  const brand = document.getElementById('brandInput').value.trim();
+  if (brand) window.open('https://mercari.com/search/?keyword=' + encodeURIComponent(brand), '_blank');
+}
+
+// サジェスト外クリックで閉じる
+document.addEventListener('click', e => {
+  if (!e.target.closest('#brandWrap')) document.getElementById('suggestions').style.display = 'none';
 });
 
 // =============================================
 // タブ切り替え
 // =============================================
 function switchTab(tab) {
+  currentTab = tab;
   document.getElementById('photoPanel').style.display  = tab === 'photo'  ? 'block' : 'none';
   document.getElementById('manualPanel').style.display = tab === 'manual' ? 'block' : 'none';
   document.getElementById('tabPhoto').classList.toggle('active',  tab === 'photo');
   document.getElementById('tabManual').classList.toggle('active', tab === 'manual');
+  if (tab === 'manual') updateManualPanel();
 }
 
 // =============================================
 // 写真モード
 // =============================================
-let imageData = null;
-let imageType = null;
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  originalFile = file;
+  resizeAndConvert(file, function(b64, mime) {
+    imageData = b64; imageType = mime;
+    document.getElementById('preview').src = 'data:' + mime + ';base64,' + b64;
+    document.getElementById('preview').style.display = 'block';
+    document.getElementById('uploadPlaceholder').style.display = 'none';
+    document.getElementById('uploadArea').classList.add('has-image');
+    document.getElementById('lensBtn').style.display = 'block';
+    updateAnalyzeBtn();
+    hideError();
+    document.getElementById('resultCard').style.display = 'none';
+  });
+});
 
-const fileInput   = document.getElementById('fileInput');
-const preview     = document.getElementById('preview');
-const uploadArea  = document.getElementById('uploadArea');
-const placeholder = document.getElementById('uploadPlaceholder');
-const analyzeBtn  = document.getElementById('analyzeBtn');
-
-fileInput.addEventListener('change', function(e) {
+document.getElementById('fileInput2').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (!file) return;
   resizeAndConvert(file, function(b64, mime) {
-    imageData = b64;
-    imageType = mime;
-    preview.src = 'data:' + mime + ';base64,' + b64;
-    preview.style.display = 'block';
-    placeholder.style.display = 'none';
-    uploadArea.classList.add('has-image');
-    analyzeBtn.disabled = false;
-    hideError();
-    document.getElementById('resultCard').style.display = 'none';
+    imageData2 = b64; imageType2 = mime;
+    document.getElementById('preview2').src = 'data:' + mime + ';base64,' + b64;
+    document.getElementById('preview2').style.display = 'block';
+    document.getElementById('uploadPlaceholder2').style.display = 'none';
+    analyze(); // 自動で再判別
   });
 });
 
@@ -1146,26 +842,38 @@ function resizeAndConvert(file, cb) {
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
-      cb(dataUrl.split(',')[1], 'image/jpeg');
+      const url = canvas.toDataURL('image/jpeg', 0.88);
+      cb(url.split(',')[1], 'image/jpeg');
     };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
+function updateAnalyzeBtn() {
+  const hasBrand = document.getElementById('brandInput').value.trim().length > 0;
+  document.getElementById('analyzeBtn').disabled = !(imageData && hasBrand);
+}
+
 async function analyze() {
   if (!imageData) return;
   hideError();
-  analyzeBtn.disabled = true;
+  document.getElementById('analyzeBtn').disabled = true;
   document.getElementById('loading').style.display = 'block';
   document.getElementById('resultCard').style.display = 'none';
 
   try {
+    const body = {
+      imageData,
+      mediaType: imageType,
+      brandName: document.getElementById('brandInput').value.trim(),
+    };
+    if (imageData2) { body.imageData2 = imageData2; body.mediaType2 = imageType2; }
+
     const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageData, mediaType: imageType }),
+      body: JSON.stringify(body),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || '判定に失敗しました');
@@ -1174,7 +882,7 @@ async function analyze() {
     showError(err.message);
   } finally {
     document.getElementById('loading').style.display = 'none';
-    analyzeBtn.disabled = false;
+    updateAnalyzeBtn();
   }
 }
 
@@ -1182,24 +890,46 @@ function showPhotoResult(data) {
   const card  = document.getElementById('resultCard');
   const badge = document.getElementById('resultBadge');
   const raw   = document.getElementById('resultRaw');
+
   badge.className = 'result-badge ' + data.judgment;
-  if (data.judgment === 'buy')          badge.textContent = '✅ 仕入れ推奨';
-  else if (data.judgment === 'consider') badge.textContent = '🔶 要検討';
-  else                                   badge.textContent = '⛔ スルー推奨';
+  badge.textContent = data.judgment === 'buy' ? '✅ 仕入れ推奨' : data.judgment === 'consider' ? '🔶 要検討' : '⛔ スルー推奨';
   raw.textContent = data.result;
+
+  // 信頼度「低」かつ2枚目未提出なら追加撮影エリアを表示
+  const lowConf = document.getElementById('lowConfSection');
+  lowConf.style.display = (data.isLowConfidence && !imageData2) ? 'block' : 'none';
+
   card.style.display = 'block';
   setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
 function resetPhoto() {
   imageData = null; imageType = null;
-  preview.style.display = 'none'; preview.src = '';
-  placeholder.style.display = 'block';
-  uploadArea.classList.remove('has-image');
-  analyzeBtn.disabled = true;
+  imageData2 = null; imageType2 = null;
+  originalFile = null;
+  document.getElementById('preview').style.display = 'none';
+  document.getElementById('preview').src = '';
+  document.getElementById('uploadPlaceholder').style.display = 'block';
+  document.getElementById('uploadArea').classList.remove('has-image');
+  document.getElementById('lensBtn').style.display = 'none';
+  document.getElementById('preview2').style.display = 'none';
+  document.getElementById('preview2').src = '';
+  document.getElementById('uploadPlaceholder2').style.display = 'block';
+  document.getElementById('lowConfSection').style.display = 'none';
   document.getElementById('resultCard').style.display = 'none';
-  fileInput.value = '';
+  document.getElementById('fileInput').value = '';
+  document.getElementById('fileInput2').value = '';
+  updateAnalyzeBtn();
   hideError();
+}
+
+function openGoogleLens() {
+  if (originalFile && navigator.canShare && navigator.canShare({ files: [originalFile] })) {
+    navigator.share({ files: [originalFile], title: '年式チェッカー' })
+      .catch(() => window.open('https://lens.google.com/', '_blank'));
+  } else {
+    window.open('https://lens.google.com/', '_blank');
+  }
 }
 
 function showError(msg) {
@@ -1207,7 +937,6 @@ function showError(msg) {
   b.textContent = '⚠️ ' + msg;
   b.style.display = 'block';
 }
-
 function hideError() {
   document.getElementById('errorBox').style.display = 'none';
 }
@@ -1215,90 +944,51 @@ function hideError() {
 // =============================================
 // 手入力モード
 // =============================================
-let selectedBrand = null;
+function updateManualPanel() {
+  const hint      = document.getElementById('manualHint');
+  const notFound  = document.getElementById('brandNotFound');
+  const guideCard = document.getElementById('brandGuideCard');
+  const special   = document.getElementById('specialCard');
+  const codeSection = document.getElementById('codeInputSection');
+  const brandVal  = document.getElementById('brandInput').value.trim();
 
-function onBrandInput(val) {
-  // ブランド選択状態をリセット
-  selectedBrand = null;
-  document.getElementById('brandGuideCard').style.display = 'none';
-  document.getElementById('codeInputSection').style.display = 'none';
-  document.getElementById('specialCard').style.display = 'none';
-  document.getElementById('manualResultCard').style.display = 'none';
-  document.getElementById('codeInput').value = '';
-
-  const query = val.trim();
-  const sugEl = document.getElementById('suggestions');
-
-  if (!query) {
-    sugEl.style.display = 'none';
-    sugEl.innerHTML = '';
+  if (!brandVal) {
+    hint.style.display = 'block';
+    notFound.style.display = 'none';
+    guideCard.style.display = 'none';
+    special.style.display = 'none';
+    codeSection.style.display = 'none';
     return;
   }
 
-  const ql = query.toLowerCase();
-  const matches = BRAND_INDEX
-    .filter(item => item.name.toLowerCase().includes(ql))
-    .slice(0, 8);
+  hint.style.display = 'none';
 
-  if (matches.length === 0) {
-    sugEl.style.display = 'none';
-    sugEl.innerHTML = '';
+  if (!selectedBrand) {
+    notFound.style.display = 'block';
+    guideCard.style.display = 'none';
+    special.style.display = 'none';
+    codeSection.style.display = 'none';
     return;
   }
 
-  sugEl.innerHTML = matches.map((item, i) =>
-    `<div class="suggestion-item" data-i="${i}">
-      ${item.name}
-      ${item.parentName ? `<span class="sub-label">→ ${item.parentName}</span>` : ''}
-    </div>`
-  ).join('');
-
-  sugEl.querySelectorAll('.suggestion-item').forEach((el, i) => {
-    const handler = (e) => { e.preventDefault(); e.stopPropagation(); selectBrand(matches[i]); };
-    el.addEventListener('mousedown', handler);
-    el.addEventListener('touchend',  handler);
-  });
-
-  sugEl.style.display = 'block';
-}
-
-function selectBrand(item) {
-  selectedBrand = item.brand;
-
-  // 入力欄とサジェストを更新
-  const searchInput = document.getElementById('brandSearch');
-  searchInput.value = item.parentName
-    ? item.name + ' (' + item.parentName + ')'
-    : item.name;
-  const sugEl = document.getElementById('suggestions');
-  sugEl.style.display = 'none';
-  sugEl.innerHTML = '';
+  notFound.style.display = 'none';
 
   // ガイド表示
-  const guideCard = document.getElementById('brandGuideCard');
-  document.getElementById('guideBrandName').textContent =
-    '📖 ' + item.brand.main + (item.parentName ? '' : '');
-  document.getElementById('guideText').textContent = item.brand.guide;
+  document.getElementById('guideBrandName').textContent = '📖 ' + selectedBrand.main;
+  document.getElementById('guideText').textContent = selectedBrand.guide;
   guideCard.style.display = 'block';
 
-  // 結果リセット
-  document.getElementById('manualResultCard').style.display = 'none';
-
-  if (item.brand.isSpecial) {
-    document.getElementById('codeInputSection').style.display = 'none';
-    const specialCard = document.getElementById('specialCard');
-    document.getElementById('specialText').textContent = item.brand.guide;
-    const link = document.getElementById('googleSearchLink');
-    link.href = 'https://www.google.com/search?q=' + encodeURIComponent(item.brand.main + ' 型番 年式');
-    specialCard.style.display = 'block';
+  if (selectedBrand.isSpecial) {
+    codeSection.style.display = 'none';
+    document.getElementById('specialText').textContent = selectedBrand.guide;
+    document.getElementById('googleSearchLink').href =
+      'https://www.google.com/search?q=' + encodeURIComponent(selectedBrand.main + ' 型番 年式');
+    special.style.display = 'block';
   } else {
-    document.getElementById('specialCard').style.display = 'none';
-    const codeSection = document.getElementById('codeInputSection');
-    const codeInput   = document.getElementById('codeInput');
-    codeInput.placeholder = item.brand.placeholder || '';
-    codeInput.value = '';
+    special.style.display = 'none';
+    document.getElementById('codeInput').placeholder = selectedBrand.placeholder || '';
     codeSection.style.display = 'block';
-    setTimeout(() => codeInput.focus(), 150);
+    setTimeout(() => document.getElementById('codeInput').focus(), 150);
   }
 }
 
@@ -1307,8 +997,7 @@ function onCodeInput(val) {
     document.getElementById('manualResultCard').style.display = 'none';
     return;
   }
-  const result = selectedBrand.convert(val);
-  showManualResult(result, val);
+  showManualResult(selectedBrand.convert(val), val);
 }
 
 function showManualResult(result, inputVal) {
@@ -1325,52 +1014,37 @@ function showManualResult(result, inputVal) {
   }
 
   const yr = result.yearNum;
-  let badgeClass, badgeText, judgmentLine;
-
+  let bc, bt, jt;
   if (!yr || result.judgment === 'unknown') {
-    badgeClass = 'consider'; badgeText = '🔶 要確認';
-    judgmentLine = '年式：' + result.year;
+    bc='consider'; bt='🔶 要確認'; jt='年式：'+result.year;
   } else if (yr >= 2023) {
-    badgeClass = 'buy';     badgeText = '✅ 仕入れ推奨';
-    judgmentLine = '年式：' + result.year + '\n判定：高優先度（2023年以降）';
+    bc='buy';     bt='✅ 仕入れ推奨'; jt='年式：'+result.year+'\n判定：高優先度（2023年以降）';
   } else if (yr >= 2020) {
-    badgeClass = 'consider'; badgeText = '🔶 積極的に仕入れ検討';
-    judgmentLine = '年式：' + result.year + '\n判定：積極的に仕入れ検討（2020年以降）';
+    bc='consider'; bt='🔶 積極的に仕入れ検討'; jt='年式：'+result.year+'\n判定：積極的に仕入れ検討（2020年以降）';
   } else if (yr >= 2017) {
-    badgeClass = 'consider'; badgeText = '🔶 要検討';
-    judgmentLine = '年式：' + result.year + '\n判定：検討対象（2017年以降）';
+    bc='consider'; bt='🔶 要検討'; jt='年式：'+result.year+'\n判定：検討対象（2017年以降）';
   } else {
-    badgeClass = 'skip';    badgeText = '⛔ スルー推奨';
-    judgmentLine = '年式：' + result.year + '\n判定：古すぎる可能性あり';
+    bc='skip';    bt='⛔ スルー推奨'; jt='年式：'+result.year+'\n判定：古すぎる可能性あり';
   }
+  if (result.note) jt += '\n\n⚠️ ' + result.note;
 
-  if (result.note) judgmentLine += '\n\n⚠️ ' + result.note;
-
-  badge.className = 'result-badge ' + badgeClass;
-  badge.textContent = badgeText;
-  raw.textContent = judgmentLine;
+  badge.className = 'result-badge ' + bc;
+  badge.textContent = bt;
+  raw.textContent = jt;
   card.style.display = 'block';
   setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
 function resetManual() {
-  selectedBrand = null;
-  document.getElementById('brandSearch').value = '';
   document.getElementById('codeInput').value = '';
-  document.getElementById('brandGuideCard').style.display = 'none';
-  document.getElementById('codeInputSection').style.display = 'none';
-  document.getElementById('specialCard').style.display = 'none';
   document.getElementById('manualResultCard').style.display = 'none';
-  document.getElementById('suggestions').style.display = 'none';
-  document.getElementById('brandSearch').focus();
+  document.getElementById('brandInput').value = '';
+  document.getElementById('mercariBtn').style.display = 'none';
+  selectedBrand = null;
+  updateManualPanel();
+  updateAnalyzeBtn();
+  document.getElementById('brandInput').focus();
 }
-
-// サジェスト外タップで閉じる
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('#brandSearchWrap')) {
-    document.getElementById('suggestions').style.display = 'none';
-  }
-});
 </script>
 
 </body>
