@@ -74,9 +74,9 @@
       border-radius: 12px;
       z-index: 200;
       box-shadow: 0 8px 24px rgba(0,0,0,0.14);
-      overflow: hidden;
-      max-height: 240px;
-      overflow-y: auto;
+      max-height: 40vh;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
     }
     .sug-item {
       padding: 12px 14px;
@@ -506,13 +506,13 @@ function fy(year) {
 }
 
 const BRANDS = [
-  { id:1, main:'オンワード樫山', subs:['ニジュウサンク','クミキョク','ジユウク','ベイジ','アンフィーロ','アイシービー','トッカ','ジェイプレス','ポールスミスレディース','ジョゼフ','エイトン'],
+  { id:1, main:'オンワード樫山', aliases:['Onward Kashiyama'], subs:['ニジュウサンク','クミキョク','ジユウク','ベイジ','アンフィーロ','アイシービー','トッカ','ジェイプレス','ポールスミスレディース','ジョゼフ','エイトン'],
     guide:'型番のアルファベット1文字を入力\nH=2017 Y=2018 K=2019 B=2020 I=2021 N=2022 S=2023 C=2024 G=2025 L=2026（10年周期）', placeholder:'G',
     convert(v){const m={H:2017,Y:2018,K:2019,B:2020,I:2021,N:2022,S:2023,C:2024,G:2025,L:2026};return fy(m[v.trim().toUpperCase()]||null);}},
-  { id:2, main:'ファーイーストカンパニー', subs:['アナイ','アルアバイル','ルルウィルビー'],
+  { id:2, main:'ファーイーストカンパニー', subs:['アナイ','ANAYI','アルアバイル','ルルウィルビー'],
     guide:'型番の左から3,4桁目の数字2桁を入力\n例：25 → 2025年', placeholder:'25',
     convert(v){return fy(d2(v));}},
-  { id:3, main:'フォクシー', subs:['フォクシーニューヨーク','アディアム','ベロアノワール','フォクシースポーツ'],
+  { id:3, main:'フォクシー', aliases:['FOXEY'], subs:['フォクシーニューヨーク','アディアム','ベロアノワール','フォクシースポーツ'],
     guide:'型番（数字5桁）の左から1,2桁目を入力\n37=2017〜 46=2026（以降継続）', placeholder:'45',
     convert(v){const n=parseInt(v.trim());return(n>=37&&n<=60)?fy(2000+(n-20)):null;}},
   { id:4, main:'フィルム', subs:['ダブルスタンダードクロージング','ソブ','ディーヒム'],
@@ -524,7 +524,7 @@ const BRANDS = [
   { id:6, main:'エムズグレイシー', subs:[],
     guide:'型番のハイフン右側1桁目を入力\n※洗濯マークも確認して年代を区別してください', placeholder:'5',
     convert(v){return fy(d1(v));}},
-  { id:7, main:'モンクレール', subs:[],
+  { id:7, main:'モンクレール', aliases:['MONCLER'], subs:[],
     guide:'型番の先頭アルファベット1文字を入力\nC=2017 D=2018 E=2019 F=2020 G=2021 H=2022 I=2023 J=2024 K=2025 L=2026\nDIND-表記なら続く2桁の数字を入力（25=2025）', placeholder:'K',
     convert(v){v=v.trim().toUpperCase();const lm={C:2017,D:2018,E:2019,F:2020,G:2021,H:2022,I:2023,J:2024,K:2025,L:2026};if(lm[v])return fy(lm[v]);const n=parseInt(v);return(n>=21&&n<=40)?fy(2000+n):null;}},
   { id:8, main:'TATRAS', subs:[],
@@ -536,13 +536,13 @@ const BRANDS = [
   { id:10, main:'メルローズ', subs:['ピンクハウス','ティアラ'],
     guide:'型番の左から4番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
-  { id:11, main:'ラルフローレン', subs:['ローレンラルフローレン','ポロラルフローレン'],
+  { id:11, main:'ラルフローレン', aliases:['Ralph Lauren'], subs:['ローレンラルフローレン','Lauren Ralph Lauren','ポロラルフローレン','Polo Ralph Lauren'],
     guide:'QRコードをスキャン → HP → more detail → date の日付を入力\nQRなしの場合は洗濯マークの年代を目視確認', placeholder:'2025-08-01',
     convert(v){const m=v.match(/(\d{4})/);if(m)return{...fy(parseInt(m[1])),year:v+'（製造日）'};return{year:v+'（参考）',yearNum:null,judgment:'consider'};}},
   { id:12, main:'ルネ', subs:[],
     guide:'型番の左から2番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
-  { id:13, main:'ヘルノ', subs:[],
+  { id:13, main:'ヘルノ', aliases:['HERNO'], subs:[],
     guide:'EACタグに記載の発売日（月/年形式）を入力\n例：03/2025', placeholder:'03/2025',
     convert(v){const m=v.match(/(\d{4})/);return m?{...fy(parseInt(m[1])),year:v+'（発売日）'}:null;}},
   { id:14, main:'ワールド', subs:['クードシャンス','ドレステリア','リフレクト','インディヴィ','アンタイトル','タケオキクチ'],
@@ -563,10 +563,10 @@ const BRANDS = [
   { id:19, main:'パル', subs:['ギャラルダギャランテ','イアパピヨネ','ビアズリー','ルイス','ウィムガゼット','ミスティック'],
     guide:'2018AW以降：アルファベットに続く数字の3桁目（1桁）を入力\n2018SS以前：数字2桁を入力', placeholder:'5',
     convert(v){v=v.trim();return v.length<=1?fy(d1(v)):fy(d2(v));}},
-  { id:20, main:'ランバンコレクション', subs:[],
+  { id:20, main:'ランバンコレクション', aliases:['LANVIN'], subs:[],
     guide:'23SS以前：左から2番目の数字を入力\n23AW以降：MKの数字2桁目を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
-  { id:21, main:'サカイ', subs:['サカイラック'],
+  { id:21, main:'サカイ', aliases:['sacai'], subs:['サカイラック'],
     guide:'型番の左から1,2桁目の数字を入力\n会社名がSCWなら ADに続く4桁の年号を入力\n例：25 → 2025年', placeholder:'25',
     convert(v){v=v.trim().replace(/^AD/i,'');return v.length===4?fy(parseInt(v)):fy(d2(v));}},
   { id:22, main:'マザーズインダストリー', subs:['ミズイロインド','ミディウミ','ミディウミソリッド','マーマーマー'],
@@ -578,7 +578,7 @@ const BRANDS = [
   { id:24, main:'カイタックインターナショナル', subs:['パラスパレス'],
     guide:'カイタック：ハイフン右側1桁目を入力（5=2025）\nパラスパレス：アルファベットに続く2桁を入力（25=2025）', placeholder:'5',
     convert(v){v=v.trim();return v.length<=1?fy(d1(v)):fy(d2(v));}},
-  { id:25, main:'ファーストリテイリング', subs:['ユニクロ'],
+  { id:25, main:'ファーストリテイリング', subs:['ユニクロ','UNIQLO'],
     guide:'型番の( - )の中の左から1番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
   { id:26, main:'シンゾーン', subs:[],
@@ -587,7 +587,7 @@ const BRANDS = [
   { id:27, main:'エイネット', subs:['ツモリチサト','ズッカ','プランテーション'],
     guide:'型番の左から3番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
-  { id:28, main:'イッセイミヤケ', subs:['プリーツプリーズ','オムプリッセ','イッセイミヤケミー','ハート'],
+  { id:28, main:'イッセイミヤケ', aliases:['ISSEY MIYAKE','Homme Plissé'], subs:['プリーツプリーズ','Pleats Please','オムプリッセ','イッセイミヤケミー','ハート'],
     guide:'型番の左から3番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
   { id:29, main:'ボーダーズアットバルコニー', subs:[],
@@ -602,10 +602,10 @@ const BRANDS = [
   { id:32, main:'オッジインターナショナル', subs:['レナウン','アクアスキュータム','ダーバン','トクコプルミエヴォル'],
     guide:'型番末尾付近の2桁の数字を入力\n例：25 → 2025年', placeholder:'25',
     convert(v){return fy(d2(v));}},
-  { id:33, main:'リンク・セオリー・ジャパン', subs:['セオリー','セオリーリュクス'],
+  { id:33, main:'リンク・セオリー・ジャパン', subs:['セオリー','Theory','セオリーリュクス','theory luxe'],
     guide:'ハイフンに続く1桁目の数字を入力\n9=2019 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
     convert(v){const m={'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
-  { id:34, main:'スタッフインターナショナル', subs:['メゾンマルジェラ','マルタンマルジェラ'],
+  { id:34, main:'スタッフインターナショナル', subs:['メゾンマルジェラ','Maison Margiela','マルタンマルジェラ'],
     guide:'ADに続く4桁の年号と後ろの2桁（季節）を続けて入力\n例：202501=2025年春夏 202502=2025年秋冬', placeholder:'202502',
     convert(v){v=v.trim().replace(/^AD/i,'').replace(/\s+/g,'');const m=v.match(/^(20\d{2})(0[12])?$/);if(!m)return null;const yr=parseInt(m[1]);const s=m[2]==='01'?'春夏':m[2]==='02'?'秋冬':'';return{...fy(yr),year:yr+'年'+(s?' '+s:'')};}},
   { id:35, main:'anuans', subs:['アニュアンス'],
@@ -620,7 +620,7 @@ const BRANDS = [
   { id:38, main:'ビキジャパン', subs:['ピッコーネ','アルチビオ'],
     guide:'Fに続く1桁目の数字を入力\n9=2019 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
     convert(v){const m={'9':2019,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
-  { id:39, main:'ヨーガンレール', subs:['ババグーリ'],
+  { id:39, main:'ヨーガンレール', aliases:['JURGEN LEHL'], subs:['ババグーリ'],
     guide:'アルファベットを含めた左から4番目の数字を入力\n例：5=2025 6=2026', placeholder:'5',
     convert(v){return fy(d1(v));}},
   { id:40, main:'クリステンセンドゥノルド', subs:[], isSpecial:true,
@@ -629,7 +629,7 @@ const BRANDS = [
   { id:41, main:'BEAMS', subs:['ビームス'],
     guide:'型番左端付近の2桁の数字を入力（記載がない場合もあります）\n例：25 → 2025年', placeholder:'25',
     convert(v){return fy(d2(v));}},
-  { id:42, main:'コムデギャルソン', subs:['ジュンヤワタナベ','ノワールケイニノミヤ'],
+  { id:42, main:'コムデギャルソン', aliases:['COMME des GARCONS'], subs:['ジュンヤワタナベ','ノワールケイニノミヤ'],
     guide:'ADに続く4桁の数字を入力\n例：2025 → 2025年', placeholder:'2025',
     convert(v){const n=parseInt(v.trim().replace(/^AD/i,''));return(n>=2015&&n<=2035)?fy(n):null;}},
   { id:43, main:'マッシュスタイルラボ', subs:['スナイデル','フレイアイディー','ミラオーウェン','リリーブラウン','エミ','ファーファー','スタイリング','ジェラートピケ','セルフォード','ミースロエ'],
@@ -650,7 +650,7 @@ const BRANDS = [
   { id:48, main:'flappers', subs:['ティッカ'],
     guide:'型番の左から3番目の数字を入力\n8=2018 0=2020 1=2021 2=2022 3=2023 4=2024 5=2025 6=2026', placeholder:'5',
     convert(v){const m={'8':2018,'0':2020,'1':2021,'2':2022,'3':2023,'4':2024,'5':2025,'6':2026};return fy(m[v.trim()]||null);}},
-  { id:49, main:'ミナ', subs:['ミナペルホネン'],
+  { id:49, main:'ミナ', subs:['ミナペルホネン','mina perhonen'],
     guide:'型番の左1,2番目を入力（アルファベット）\nV=2017 W=2018 X=2019 Y=2020 Z=2021 aa=2022 ab=2023 ac=2024 ad=2025 ae=2026', placeholder:'ad',
     convert(v){const k=v.trim().toLowerCase();const m={v:2017,w:2018,x:2019,y:2020,z:2021,aa:2022,ab:2023,ac:2024,ad:2025,ae:2026};return fy(m[k]||null);}},
   { id:50, main:'MADISONBLUE', subs:['マディソンブルー'],
@@ -659,22 +659,22 @@ const BRANDS = [
   { id:51, main:'LIFE s', subs:['トゥデイフル'],
     guide:'型番の左2,3番目を入力\n例：25 → 2025年', placeholder:'25',
     convert(v){return fy(d2(v));}},
-  { id:52, main:'ブルネロクチネリ', subs:[],
+  { id:52, main:'ブルネロクチネリ', aliases:['Brunello Cucinelli'], subs:[],
     guide:'型番の該当部分の数字を入力\n例：25 → 2025年', placeholder:'25',
     convert(v){return fy(d2(v));}},
-  { id:53, main:'マメクロゴウチ', subs:[],
+  { id:53, main:'マメクロゴウチ', aliases:['Mame Kurogouchi'], subs:[],
     guide:'MMに続く2桁を入力\n例：25 → 2025年', placeholder:'25',
     convert(v){return fy(d2(v.trim().replace(/^MM/i,'')));}},
-  { id:54, main:'エトロジャパン', subs:[],
+  { id:54, main:'エトロジャパン', aliases:['ETRO'], subs:[],
     guide:'型番の2桁目の数字を入力（洗濯マークで年代を区別）\nEACタグのдата производстваがあればその日付を入力', placeholder:'5',
     convert(v){v=v.trim();if(v.includes('/')&&v.length>4){const m=v.match(/(\d{4})/);if(m)return{...fy(parseInt(m[1])),year:v+'（発売日）'};}return fy(d1(v));}},
-  { id:55, main:'ジョイックス', subs:['ランバンメンズ','ヴィヴィアンウエストウッドマン','ポールスミスメンズ','サイコバニー'],
+  { id:55, main:'ジョイックス', subs:['ランバンメンズ','LANVIN','ヴィヴィアンウエストウッドマン','ポールスミスメンズ','Paul Smith','サイコバニー'],
     guide:'MK横の型番：1桁目（1=春夏 2=秋冬）と2桁目（年式）を2桁で入力\n例：15 → 春夏・2025年', placeholder:'15',
     convert(v){v=v.trim();if(v.length<2)return null;const s=v[0]==='1'?'春夏':v[0]==='2'?'秋冬':'';const yr=d1(v[1]);return yr?{...fy(yr),year:yr+'年'+(s?' '+s:'')}:null;}},
-  { id:56, main:'バロックジャパンリミテッド', subs:['エンフォルド','ナゴンスタンス'],
+  { id:56, main:'バロックジャパンリミテッド', subs:['エンフォルド','ENFOLD','ナゴンスタンス'],
     guide:'アルファベット→そのまま入力（A=2017 B=2018 … I=2025 J=2026）\n数字→タグの数字をそのまま入力（年式=数字+7）', placeholder:'I',
     convert(v){v=v.trim();if(/^[A-Za-z]$/.test(v)){const m={A:2017,B:2018,C:2019,D:2020,E:2021,F:2022,G:2023,H:2024,I:2025,J:2026};return fy(m[v.toUpperCase()]||null);}const n=parseInt(v);return!isNaN(n)?fy(2007+n):null;}},
-  { id:57, main:'マックスマーラ', subs:['マックスアンドコー','ウィークエンドマックスマーラ','マックスマーラステュディオ','エスマックスマーラ'],
+  { id:57, main:'マックスマーラ', aliases:['MAX MARA','Max Mara'], subs:['マックスアンドコー','ウィークエンドマックスマーラ','Weekend Max Mara','マックスマーラステュディオ','エスマックスマーラ'],
     guide:'дата производстваに記載の日付を入力\n例：12/10/2025', placeholder:'12/10/2025',
     convert(v){const m=v.match(/(\d{4})/);return m?{...fy(parseInt(m[1])),year:v+'（発売日）'}:null;}},
   { id:58, main:'ヨーコチャン', subs:[],
@@ -695,6 +695,7 @@ const BRANDS = [
 const BRAND_INDEX = [];
 BRANDS.forEach(b => {
   BRAND_INDEX.push({ name: b.main, parent: null, brand: b });
+  if (b.aliases) b.aliases.forEach(a => BRAND_INDEX.push({ name: a, parent: null, brand: b }));
   b.subs.forEach(s => BRAND_INDEX.push({ name: s, parent: b.main, brand: b }));
 });
 
@@ -754,9 +755,14 @@ function showSuggestions(val) {
   ).join('');
 
   sugEl.querySelectorAll('.sug-item').forEach((el, i) => {
-    const pick = (e) => { e.preventDefault(); e.stopPropagation(); selectBrand(hits[i]); };
-    el.addEventListener('mousedown', pick);
-    el.addEventListener('touchend',  pick);
+    el.addEventListener('mousedown', (e) => { e.preventDefault(); e.stopPropagation(); selectBrand(hits[i]); });
+    let touchStartY = 0;
+    el.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    el.addEventListener('touchend', (e) => {
+      if (Math.abs(e.changedTouches[0].clientY - touchStartY) < 10) {
+        e.preventDefault(); e.stopPropagation(); selectBrand(hits[i]);
+      }
+    });
   });
 
   sugEl.style.display = 'block';
